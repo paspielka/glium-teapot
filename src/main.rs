@@ -15,6 +15,9 @@ fn run() {
     let wb = WindowBuilder::new();
     let cb = ContextBuilder::new();
     let display = Display::new(wb, cb, &event_loop).unwrap();
+    
+    let fragment_shader = include_str!("fragment_shader.glsl");
+    let vertex_shader = include_str!("vertex_shader.glsl");
 
     let positions = VertexBuffer::new(
         &display,
@@ -30,9 +33,6 @@ fn run() {
         glium::index::PrimitiveType::TrianglesList,
         &teapot::INDICES
     ).unwrap();
-
-    let fragment_shader = include_str!("fragment_shader.glsl");
-    let vertex_shader = include_str!("vertex_shader.glsl");
 
     let program = Program::from_source(
         &display,
