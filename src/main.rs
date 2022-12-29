@@ -1,5 +1,6 @@
 mod teapot;
 
+use glam::Mat4;
 use glium::{Display, Program, Surface, uniform, VertexBuffer};
 use glium::glutin::ContextBuilder;
 use glium::glutin::event::{Event, WindowEvent};
@@ -41,12 +42,21 @@ fn run() {
         None
     ).unwrap();
 
-    let matrix = [
-        [0.1, 0.0, 0.0, 0.0],
-        [0.0, 0.1, 0.0, 0.0],
-        [0.0, 0.0, 0.1, 0.0],
-        [0.0, 0.0, 0.0, 1.0f32]
-    ];
+    let fov:f32 = 90.0;
+    let (window_width, window_height) = display.get_framebuffer_dimensions();
+    // First we need a projection matrix which we can calculate from the FoV / screen aspect ratio
+    let projection_matrix = Mat4::perspective_rh_gl(
+        fov.to_radians(),
+        (window_width as f32) / (window_height as f32),
+        0.1,
+        1000.0,
+    );
+    // We also need a view matrix to move the object away from the camera, since we would otherwise see the kettle from the inside
+    let view_matrix = Mat4::from_translation(glam::Vec3::new(0.0, 0.0, -200.0));
+    // Instead one could also send both matrices to the shader and multiply them there
+    let matrix =  projection_matrix * view_matrix;
+    // And finally we convert the matrix into a format that we can send to the shader
+    let matrix = matrix.to_cols_array_2d();
 
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
