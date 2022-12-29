@@ -27,8 +27,8 @@ fn run() {
 
     let indices = glium::index::IndexBuffer::new(
         &display,
-               glium::index::PrimitiveType::TrianglesList,
-                &teapot::INDICES
+        glium::index::PrimitiveType::TrianglesList,
+        &teapot::INDICES
     ).unwrap();
 
     let fragment_shader = include_str!("fragment_shader.glsl");
@@ -36,9 +36,9 @@ fn run() {
 
     let program = Program::from_source(
         &display,
-            vertex_shader,
-            fragment_shader,
-            None
+        vertex_shader,
+        fragment_shader,
+        None
     ).unwrap();
 
     let matrix = [
