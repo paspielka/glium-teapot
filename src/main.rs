@@ -15,7 +15,7 @@ fn run() {
     let wb = WindowBuilder::new();
     let cb = ContextBuilder::new();
     let display = Display::new(wb, cb, &event_loop).unwrap();
-    
+
     let fragment_shader = include_str!("fragment_shader.glsl");
     let vertex_shader = include_str!("vertex_shader.glsl");
 
@@ -51,6 +51,17 @@ fn run() {
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
 
+        match event {
+            Event::WindowEvent {
+                window_id: _,
+                event
+            } => match event {
+                WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
+                _ => ()
+            },
+            _ => ()
+        }
+
         let mut target = display.draw();
         target.clear_color(1.0, 1.0, 1.0, 1.0);
 
@@ -62,16 +73,5 @@ fn run() {
             &Default::default()
         ).unwrap();
         target.finish().unwrap();
-
-        match event {
-            Event::WindowEvent {
-                window_id: _,
-                event
-            } => match event {
-                WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-                _ => ()
-            },
-            _ => ()
-        }
     });
 }
